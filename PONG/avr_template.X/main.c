@@ -7,20 +7,18 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "max7219.h"
 
-int main(void) {
-    
+
+int main(void) {            
+            
     cli(); //disable interrupts global
     
     // set clock prescaler to 0: CPU runs at 20MHz
     CPU_CCP = CCP_IOREG_gc;
     CLKCTRL.MCLKCTRLB = 0x00;
     
-    // LEDs out
-    PORTC.DIR = 0xff;
-    
-
-    
+    init(15);
     sei(); //enable interrupts global
     
     while (1) {
