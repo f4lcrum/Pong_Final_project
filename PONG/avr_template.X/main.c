@@ -7,9 +7,7 @@
 
 #include "pong.h"
 
-
-
-int main(void) {            
+int main(void) {
     setup();
     play();
 }

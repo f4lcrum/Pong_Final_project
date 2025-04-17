@@ -22,7 +22,7 @@ volatile uint8_t seed = 0;
 static void set_adc() {
     // ADC is for potentiometer, need to set brightness of matrix display;
     ADC0.CTRLC = ADC_SAMPCAP_bm | ADC_REFSEL_VDDREF_gc
-               | ADC_PRESC_DIV256_gc;
+            | ADC_PRESC_DIV256_gc;
     // select input pin, POT1 for brightness settings
     ADC0.MUXPOS = ADC_MUXPOS_AIN1_gc;
     ADC0.CTRLA |= ADC_ENABLE_bm | ADC_RESSEL_bm;
@@ -37,7 +37,7 @@ static void set_timer() {
 }
 
 static void set_buttons() {
-    // PORTE interrupts - 
+    // PORTE interrupts -
     // SW1 SW4 --> controlling paddle
     // SW2 SW3 --> RESTART/PAUSE game
     PORTE.PIN0CTRL = PORT_ISC_FALLING_gc;
@@ -45,7 +45,6 @@ static void set_buttons() {
     PORTE.PIN2CTRL = PORT_ISC_FALLING_gc;
     PORTE.PIN3CTRL = PORT_ISC_FALLING_gc;
 }
-
 
 ISR(PORTE_PORT_vect, ISR_BLOCK) {
     // if upper button, paddle is going up
@@ -60,13 +59,13 @@ ISR(PORTE_PORT_vect, ISR_BLOCK) {
         paddle_down = true;
         paddle_up = false;
     }
-    
+
     if (PORTE.INTFLAGS & PIN2_bm) {
-        PORTE.INTFLAGS |=  PIN2_bm;
+        PORTE.INTFLAGS |= PIN2_bm;
         start_game = true;
         stop_game = false;
     }
-    
+
     if (PORTE.INTFLAGS & PIN3_bm) {
         PORTE.INTFLAGS |= PIN3_bm;
         start_game = false;
@@ -75,6 +74,7 @@ ISR(PORTE_PORT_vect, ISR_BLOCK) {
 }
 
 // timer B0 interrupt
+
 ISR(TCB0_INT_vect, ISR_BLOCK) {
     TCB0.INTFLAGS = 1;
     seed++;
@@ -95,8 +95,9 @@ void paddle_move(Paddle *p) {
 void set_brightness() {
     // By rotating a potentiometer we will set intensity of MATRIX display
     ADC0.COMMAND |= ADC_STCONV_bm;
-    while(ADC0.COMMAND) {}
-        
+    while (ADC0.COMMAND) {
+    }
+
     set_intensity(ADC0.RES >> 4); // Matrix knows only 0-15, so divide it by 16 => shift 4
 }
 
@@ -106,27 +107,28 @@ void update_paddle(Paddle *p) {
         p->y_pos++;
     }
     paddle_up = false;
-    
+
     // position of paddle is defined by middle LED of 3-LED paddle - therefore - 1 to NOT cut lower part of paddle
     if (paddle_down && p->y_pos > MATRIX_BOUNDARY_LOW + 1) {
         p->y_pos--;
     }
-    
+
     paddle_down = false;
-    
+
+
     paddle_move(p);
 }
 
 void setup() {
     cli(); //disable interrupts global
-    
+
     // set clock prescaler to 0: CPU runs at 20MHz
     CPU_CCP = CCP_IOREG_gc;
     CLKCTRL.MCLKCTRLB = 0x00;
-       
+
     // Init matrix display (1 = lowest brightness, 15 = highest )
     init(1);
-   
+
     set_adc();
     set_timer();
     set_buttons();
@@ -136,7 +138,7 @@ void setup() {
 void play() {
     Paddle p1 = {.x_pos = MATRIX_BOUNDARY_LOW, .y_pos = 3};
     // Ball b = {.x = 3, .y = 4, .x_direction = 1, .y_direction = 1}; // TO-DO randomize x-y_direction
-    
+
     while (1) {
         set_brightness();
         update_paddle(&p1);
