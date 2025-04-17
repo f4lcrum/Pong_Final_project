@@ -9,8 +9,6 @@
 #include <avr/interrupt.h>
 #include <avr/builtins.h>
 #include <avr/wdt.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include "pong.h"
 #include "max7219.h"
 
