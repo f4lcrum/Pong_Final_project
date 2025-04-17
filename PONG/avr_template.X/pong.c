@@ -136,6 +136,7 @@ void setup() {
 }
 
 void play() {
+    setup();
     Paddle p1 = {.x_pos = MATRIX_BOUNDARY_LOW, .y_pos = 3};
     // Ball b = {.x = 3, .y = 4, .x_direction = 1, .y_direction = 1}; // TO-DO randomize x-y_direction
 
