@@ -7,21 +7,16 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
+#include <avr/builtins.h>
+#include <avr/builtins.h>
+#include <avr/wdt.h>
 #include "max7219.h"
+#include "pong.h"
+
 
 
 int main(void) {            
-            
-    cli(); //disable interrupts global
-    
-    // set clock prescaler to 0: CPU runs at 20MHz
-    CPU_CCP = CCP_IOREG_gc;
-    CLKCTRL.MCLKCTRLB = 0x00;
-    
-    init(15);
-    sei(); //enable interrupts global
-    
-    while (1) {
-        PORTC.OUT = 0xAA;
-    }
+    setup();
+    play();
 }

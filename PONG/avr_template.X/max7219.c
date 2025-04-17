@@ -8,6 +8,9 @@
 
 #include <xc.h>
 #include "max7219.h"
+#include <stdbool.h>
+
+uint8_t led_status[8]; // array of LEDs
 
 static void SPI0_init(void)
 {
@@ -33,37 +36,67 @@ static uint8_t SPI0_exchangeData(uint8_t data)
     return SPI0.DATA;
 }
 
-static void clientSelect(void)
+static void client_select(void) 
 {
     PORTA.OUT &= ~PIN7_bm; // Set SS pin value to LOW
 }
 
-static void clientDeselect(void)
+static void client_deselect(void) 
 {
     PORTA.OUT |= PIN7_bm; // Set SS pin value to HIGH
 }
 
+static void set_led_on(uint8_t x, uint8_t y) {
+    led_status[y] |= 1 << x;
+}
 
-void sendToDisplay(uint8_t reg, uint8_t data) {
-    clientSelect();
+static void set_led_off(uint8_t x, uint8_t y) {
+    led_status[y] &= ~(1 << x);
+}
+
+void send_to_display(uint8_t reg, uint8_t data) {
+    client_select();
     SPI0_exchangeData(reg);
     SPI0_exchangeData(data);
-    clientDeselect();
+    client_deselect();
+}
+
+void set_intensity(uint8_t intensity) {
+     send_to_display(INTENSITY, intensity);
+}
+
+void clear_display() {
+    for (int i = 0; i < 8; i++) {
+        led_status[i] = 0;
+    }
+}
+
+void set_led(uint8_t x, uint8_t y, bool on) {
+    if (on) {
+        set_led_on(x, y);
+    } else {
+        set_led_off(x, y);
+    }
+    
+    for (int i = 0; i < 8; i++) {
+        send_to_display(i + 1, led_status[i]);
+    }
 }
 
 void init(uint8_t intensity) {
+    
     if (intensity > 15) intensity = 15;
     
     SPI0_init();
     
-    sendToDisplay(SCANLIMIT, 7);   // show all 8 digits
-    sendToDisplay(DECODEMODE, 0);  // using an led matrix (not digits)
-    sendToDisplay(DISPLAYTEST, 0); // no display test
+    send_to_display(SCANLIMIT, 7);   // show all 8 digits
+    send_to_display(DECODEMODE, 0);  // using an led matrix (not digits)
+    send_to_display(DISPLAYTEST, 0); // no display test
     
-    for (uint8_t i = 0; i < 8; i++ ) {
-        sendToDisplay(i + 1, 255);
-    }
+    clear_display();
     
-    sendToDisplay(INTENSITY, intensity);
-    sendToDisplay(SHUTDOWN, 1);
+    send_to_display(1, 1);
+    
+    set_intensity(intensity);
+    send_to_display(SHUTDOWN, 1);
 }

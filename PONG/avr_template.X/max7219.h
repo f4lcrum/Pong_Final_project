@@ -8,10 +8,13 @@
 #ifndef MAX7219_H
 #define	MAX7219_H
 
+#include <stdbool.h>
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
+// Commands from datasheet
 #define NOOP 0x0
 #define DIGIT0 0x1
 #define DIGIT1 0x2
@@ -26,16 +29,19 @@ extern "C" {
 #define SCANLIMIT  0xB
 #define SHUTDOWN   0xC
 #define DISPLAYTEST 0xF
-    
-    
+
+  
 static void SPI0_init(void);
-static void clientSelect(void);
-static void clientDeselect(void);
+static void client_select(void);
+static void client_deselect(void);
 static uint8_t SPI0_exchangeData(uint8_t data);
+static void set_led_on(uint8_t x, uint8_t y);
 
-void sendToDisplay(uint8_t reg, uint8_t data);
+void send_to_display(uint8_t reg, uint8_t data);
 void init(uint8_t intensity);
-
+void set_intensity(uint8_t intensity);
+void clear_display();
+void set_led(uint8_t x, uint8_t y, bool on);
 
 
 #ifdef	__cplusplus
