@@ -11,6 +11,8 @@
 #include <avr/wdt.h>
 #include "pong.h"
 #include "max7219.h"
+#include "lfsr.h"
+#include <util/delay.h>
 
 
 volatile bool paddle_down = false;
@@ -55,8 +57,8 @@ static void reset_ball(Ball *b) {
     // TO-DO randomize x-y_direction
     b->x = 3;
     b->y = 4;
-    b->x_direction = 1;
-    b->y_direction = 1;
+    b->x_direction = lfsr_randrange(0, 2) ? -1 : 1;
+    b->y_direction = lfsr_randrange(0, 2) ? -1 : 1;
 }
 
 ISR(PORTE_PORT_vect, ISR_BLOCK) {
@@ -132,7 +134,6 @@ void update_paddle(Paddle *p) {
 
     paddle_down = false;
 
-
     paddle_move(p);
 }
 
@@ -162,13 +163,58 @@ void pause() {
 void reset(Paddle *p, Ball *b) {
     reset_paddle(p);
     reset_ball(b);
+    lfsr_seed(seed);
 }
 
 void restart(Paddle *p, Ball *b) {
     reset(p, b);
     restart_game = false;
     pause_game = true;
+    clear_display();
+}
 
+void random_ball_bounce(Ball *b) {
+    uint8_t chance = lfsr_randrange(0, 3);
+
+    if (chance == 1) {
+        b->y_direction = b->y_direction * -1;
+    } else if (chance == 2) {
+        b->y_direction = 0;
+    }
+
+    b->x_direction = b->x_direction * -1;
+}
+
+void update_ball(Paddle *p, Ball *b) {
+    // to prevent "mirage effect" ( or call it "Sandevistan" effect from cyberpunk: edgerunners )
+    if (!(is_in_paddle_range(p, b->x, b->y) || is_in_paddle_range(p, b->x, b->y))) {
+        set_led(b->x, b->y, false);
+    }
+
+    b->x = b->x + b->x_direction;
+    b->y = b->y + b->y_direction;
+
+    // check for ball interaction with paddle
+    if (b->x == MATRIX_BOUNDARY_LOW) {
+        if (is_in_paddle_range(p, b->x, b->y)) {
+            random_ball_bounce(b);
+        } else {
+            restart(p, b);
+        }
+    }
+
+    // bouncing off ceiling
+    if (b->y == MATRIX_BOUNDARY_HIGH || b->y == MATRIX_BOUNDARY_LOW) {
+        b->y_direction = b->y_direction * -1;
+    }
+
+    // bounce of wall opposite to paddle
+    if (b->x == MATRIX_BOUNDARY_HIGH) {
+        b->x_direction = b->x_direction * -1;
+    }
+
+    set_led(b->x, b->y, true);
+    _delay_ms(1000);
 }
 
 void play() {
@@ -180,6 +226,7 @@ void play() {
     while (1) {
         set_brightness();
         update_paddle(&p1);
+        update_ball(&p1, &b);
         if (pause_game) pause();
         if (restart_game) restart(&p1, &b);
 

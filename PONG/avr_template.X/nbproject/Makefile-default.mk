@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c max7219.c pong.c
+SOURCEFILES_QUOTED_IF_SPACED=main.c max7219.c pong.c lfsr.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/max7219.o ${OBJECTDIR}/pong.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/max7219.o.d ${OBJECTDIR}/pong.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/max7219.o ${OBJECTDIR}/pong.o ${OBJECTDIR}/lfsr.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/max7219.o.d ${OBJECTDIR}/pong.o.d ${OBJECTDIR}/lfsr.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/max7219.o ${OBJECTDIR}/pong.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/max7219.o ${OBJECTDIR}/pong.o ${OBJECTDIR}/lfsr.o
 
 # Source Files
-SOURCEFILES=main.c max7219.c pong.c
+SOURCEFILES=main.c max7219.c pong.c lfsr.c
 
 
 
@@ -106,6 +106,12 @@ ${OBJECTDIR}/pong.o: pong.c  .generated_files/flags/default/9d161751a72d01b50501
 	@${RM} ${OBJECTDIR}/pong.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1 -g -DDEBUG  -gdwarf-2  -x c -D__$(MP_PROCESSOR_OPTION)__    -Wl,--gc-sections -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -gdwarf-3 -mconst-data-in-progmem -mno-const-data-in-config-mapped-progmem     -MD -MP -MF "${OBJECTDIR}/pong.o.d" -MT "${OBJECTDIR}/pong.o.d" -MT ${OBJECTDIR}/pong.o -o ${OBJECTDIR}/pong.o pong.c 
 	
+${OBJECTDIR}/lfsr.o: lfsr.c  .generated_files/flags/default/fa26fcac75f7841b0f502a9ce496a54fefd20394 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/lfsr.o.d 
+	@${RM} ${OBJECTDIR}/lfsr.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1 -g -DDEBUG  -gdwarf-2  -x c -D__$(MP_PROCESSOR_OPTION)__    -Wl,--gc-sections -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -gdwarf-3 -mconst-data-in-progmem -mno-const-data-in-config-mapped-progmem     -MD -MP -MF "${OBJECTDIR}/lfsr.o.d" -MT "${OBJECTDIR}/lfsr.o.d" -MT ${OBJECTDIR}/lfsr.o -o ${OBJECTDIR}/lfsr.o lfsr.c 
+	
 else
 ${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/7b67a75069c9bf57bac8b0fde2cd854c35b6cf8c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -124,6 +130,12 @@ ${OBJECTDIR}/pong.o: pong.c  .generated_files/flags/default/b7d04c938216e3f923f6
 	@${RM} ${OBJECTDIR}/pong.o.d 
 	@${RM} ${OBJECTDIR}/pong.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -x c -D__$(MP_PROCESSOR_OPTION)__    -Wl,--gc-sections -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -gdwarf-3 -mconst-data-in-progmem -mno-const-data-in-config-mapped-progmem     -MD -MP -MF "${OBJECTDIR}/pong.o.d" -MT "${OBJECTDIR}/pong.o.d" -MT ${OBJECTDIR}/pong.o -o ${OBJECTDIR}/pong.o pong.c 
+	
+${OBJECTDIR}/lfsr.o: lfsr.c  .generated_files/flags/default/6865e8bf63b6b7b248f518101f6b717f13256b9a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/lfsr.o.d 
+	@${RM} ${OBJECTDIR}/lfsr.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -x c -D__$(MP_PROCESSOR_OPTION)__    -Wl,--gc-sections -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -gdwarf-3 -mconst-data-in-progmem -mno-const-data-in-config-mapped-progmem     -MD -MP -MF "${OBJECTDIR}/lfsr.o.d" -MT "${OBJECTDIR}/lfsr.o.d" -MT ${OBJECTDIR}/lfsr.o -o ${OBJECTDIR}/lfsr.o lfsr.c 
 	
 endif
 
