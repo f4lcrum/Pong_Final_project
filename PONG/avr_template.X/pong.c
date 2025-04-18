@@ -15,8 +15,8 @@
 
 volatile bool paddle_down = false;
 volatile bool paddle_up = false;
-volatile bool start_game = false;
-volatile bool stop_game = true;
+volatile bool restart_game = false;
+volatile bool pause_game = true;
 volatile uint8_t seed = 0;
 
 static void set_adc() {
@@ -50,26 +50,30 @@ ISR(PORTE_PORT_vect, ISR_BLOCK) {
     // if upper button, paddle is going up
     if (PORTE.INTFLAGS & PIN0_bm) {
         PORTE.INTFLAGS |= PIN0_bm;
-        paddle_up = true;
-        paddle_down = false;
+        if (!pause_game) {
+            paddle_up = true;
+            paddle_down = false;
+        }
     }
     // same but for down button and paddle is going down (depends how your display is positioned tho)
     if (PORTE.INTFLAGS & PIN1_bm) {
         PORTE.INTFLAGS |= PIN1_bm;
-        paddle_down = true;
-        paddle_up = false;
+        if (!pause_game) {
+            paddle_down = true;
+            paddle_up = false;
+        }
     }
 
     if (PORTE.INTFLAGS & PIN2_bm) {
         PORTE.INTFLAGS |= PIN2_bm;
-        start_game = true;
-        stop_game = false;
+        restart_game = true;
+        pause_game = false;
     }
 
     if (PORTE.INTFLAGS & PIN3_bm) {
         PORTE.INTFLAGS |= PIN3_bm;
-        start_game = false;
-        stop_game = true;
+        pause_game = !pause_game;
+        restart_game = false;
     }
 }
 
@@ -135,13 +139,49 @@ void setup() {
     sei(); //enable interrupts global
 }
 
+void pause() {
+    while (pause_game) {
+        // game was paused - allow only setting of brightness
+        set_brightness();
+    }
+}
+
+void reset_paddle(Paddle *p) {
+    p->x_pos = MATRIX_BOUNDARY_LOW;
+    p->y_pos = 3;
+}
+
+void reset_ball(Ball *b) {
+    // TO-DO randomize x-y_direction
+    b->x = 3;
+    b->y = 4;
+    b->x_direction = 1;
+    b->y_direction = 1;
+}
+
+void reset(Paddle *p, Ball *b) {
+    reset_paddle(p);
+    reset_ball(b);
+}
+
+void restart(Paddle *p, Ball *b) {
+    reset(p, b);
+    restart_game = false;
+    pause_game = true;
+
+}
+
 void play() {
     setup();
-    Paddle p1 = {.x_pos = MATRIX_BOUNDARY_LOW, .y_pos = 3};
-    // Ball b = {.x = 3, .y = 4, .x_direction = 1, .y_direction = 1}; // TO-DO randomize x-y_direction
+    Paddle p1;
+    Ball b;
+    reset(&p1, &b);
 
     while (1) {
         set_brightness();
         update_paddle(&p1);
+        if (pause_game) pause();
+        if (restart_game) restart(&p1, &b);
+
     }
 }
