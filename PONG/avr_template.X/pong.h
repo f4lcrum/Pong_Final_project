@@ -43,3 +43,5 @@ void play();
 void set_brightness();
 void update_paddle(Paddle *p);
 void setup();
+void restart(Paddle *p, Ball *b);
+void reset(Paddle *p, Ball *b);

@@ -30,18 +30,12 @@ extern "C" {
 #define SHUTDOWN   0xC
 #define DISPLAYTEST 0xF
 
-  
-static void SPI0_init(void);
-static void client_select(void);
-static void client_deselect(void);
-static uint8_t SPI0_exchangeData(uint8_t data);
-static void set_led_on(uint8_t x, uint8_t y);
-
 void send_to_display(uint8_t reg, uint8_t data);
 void init(uint8_t intensity);
 void set_intensity(uint8_t intensity);
 void clear_display();
 void set_led(uint8_t x, uint8_t y, bool on);
+void pause();
 
 
 #ifdef	__cplusplus

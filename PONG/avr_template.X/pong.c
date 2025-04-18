@@ -46,6 +46,19 @@ static void set_buttons() {
     PORTE.PIN3CTRL = PORT_ISC_FALLING_gc;
 }
 
+static void reset_paddle(Paddle *p) {
+    p->x_pos = MATRIX_BOUNDARY_LOW;
+    p->y_pos = 3;
+}
+
+static void reset_ball(Ball *b) {
+    // TO-DO randomize x-y_direction
+    b->x = 3;
+    b->y = 4;
+    b->x_direction = 1;
+    b->y_direction = 1;
+}
+
 ISR(PORTE_PORT_vect, ISR_BLOCK) {
     // if upper button, paddle is going up
     if (PORTE.INTFLAGS & PIN0_bm) {
@@ -144,19 +157,6 @@ void pause() {
         // game was paused - allow only setting of brightness
         set_brightness();
     }
-}
-
-void reset_paddle(Paddle *p) {
-    p->x_pos = MATRIX_BOUNDARY_LOW;
-    p->y_pos = 3;
-}
-
-void reset_ball(Ball *b) {
-    // TO-DO randomize x-y_direction
-    b->x = 3;
-    b->y = 4;
-    b->x_direction = 1;
-    b->y_direction = 1;
 }
 
 void reset(Paddle *p, Ball *b) {
