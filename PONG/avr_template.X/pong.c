@@ -199,7 +199,7 @@ void update_ball(Paddle *p, Ball *b) {
         if (is_in_paddle_range(p, b->x, b->y)) {
             random_ball_bounce(b);
         } else {
-            restart(p, b);
+            restart_game = true;
         }
     }
 
@@ -214,7 +214,7 @@ void update_ball(Paddle *p, Ball *b) {
     }
 
     set_led(b->x, b->y, true);
-    _delay_ms(1000);
+    _delay_ms(2000);
 }
 
 void play() {
