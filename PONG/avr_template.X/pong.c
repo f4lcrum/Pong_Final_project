@@ -174,11 +174,15 @@ void restart(Paddle *p, Ball *b) {
 }
 
 void random_ball_bounce(Ball *b) {
-    uint8_t chance = lfsr_randrange(0, 3);
+    lfsr_seed(seed);
+    uint8_t chance = lfsr_randrange(0, 2);
 
-    if (chance == 1) {
+    if (chance % 2 == 0) {
+        if (b->y_direction == 0) {
+            b->y_direction = chance < 128 ? 1 : -1;
+        }
         b->y_direction = b->y_direction * -1;
-    } else if (chance == 2) {
+    } else {
         b->y_direction = 0;
     }
 
@@ -191,8 +195,6 @@ void update_ball(Paddle *p, Ball *b) {
         set_led(b->x, b->y, false);
     }
 
-    b->x = b->x + b->x_direction;
-    b->y = b->y + b->y_direction;
 
     // check for ball interaction with paddle
     if (b->x == MATRIX_BOUNDARY_LOW) {
@@ -212,6 +214,9 @@ void update_ball(Paddle *p, Ball *b) {
     if (b->x == MATRIX_BOUNDARY_HIGH) {
         b->x_direction = b->x_direction * -1;
     }
+
+    b->x = b->x + b->x_direction;
+    b->y = b->y + b->y_direction;
 
     set_led(b->x, b->y, true);
     _delay_ms(2000);

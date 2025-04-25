@@ -4,8 +4,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/main.c</file>
+            <file>file:/opt/microchip/xc8/v3.00/avr/avr/include/util/delay.h</file>
+            <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/pong.h</file>
             <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/max7219.c</file>
+            <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/lfsr.h</file>
+            <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/pong.c</file>
+            <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/lfsr.c</file>
             <file>file:/home/kristian/Desktop/skola/PB171_FINAL/PONG/PONG/avr_template.X/max7219.h</file>
+            <file>file:/opt/microchip/xc8/v3.00/avr/avr/include/bits/alltypes.h</file>
         </group>
     </open-files>
 </project-private>
